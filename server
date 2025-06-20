@@ -1,3 +1,4 @@
+gg.toast("update")
 function AddList(name, address, offset, type, value, status, save)
     local self = {}
     self[1] = {}
