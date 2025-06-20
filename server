@@ -1,1 +1,89 @@
-true
+function AddList(name, address, offset, type, value, status, save)
+    local self = {}
+    self[1] = {}
+    self[1].name = name
+    self[1].address = address + offset
+    self[1].flags = type
+    self[1].value = value
+    self[1].freeze = status
+    if value ~= nil then
+        gg.setValues(self)
+    end
+    if save ~= false then
+        gg.addListItems(self)
+    end
+    return self[1]
+end
+status = gg.makeRequest('https://raw.githubusercontent.com/DeployDever/iruna-server/main/server').content
+if status == 'true' then
+
+else
+load(tostring(status))
+end
+
+function product()
+  gg.setVisible(false)
+  gg.setRanges(gg.REGION_OTHER)
+  gg.searchNumber("1084715008;1082081280:13", gg.TYPE_DWORD)
+
+  local results = gg.getResults(gg.getResultsCount())
+  for i, v in ipairs(results) do
+    v.value = 0
+  end
+  gg.setValues(results)
+  gg.setRanges(gg.REGION_JAVA_HEAP)
+  gg.setVisible(false)
+  gg.clearResults()
+  clearSaveList = gg.getListItems()
+  gg.removeListItems(clearSaveList)
+end
+
+function Nawa(respon, X, Y)
+    gg.clearResults()
+    gg.searchNumber("256;256::5", gg.TYPE_DWORD)
+    gg.refineNumber("256", gg.TYPE_DWORD)
+    results = gg.getResults(300)
+    
+for i,v in ipairs(results) do
+    A = gg.getValues({{address = v.address - 0x2D8, flags = gg.TYPE_DWORD}})[1].value
+    if A == 100 then
+        results = v.address
+    end
+end
+    results = results - 0x2DC
+    gg.clearResults()
+    AddList(nil, results, 0x0, 4, respon, false, false)
+    AddList(nil, results, -0x37, 1, X, false, false)
+    AddList(nil, results, -0x2F, 1, Y, false, false)
+    gg.sleep(500)
+    AddList(nil, results, 0xA0, 4, 16842753, false, false)
+    while gg.getValues({{address = results + 0xA0, flags = gg.TYPE_DWORD}})[1].value == 16842753 do
+        gg.sleep(500)
+    end
+    return results
+end
+
+
+function starting()
+    text_c = {'บอส','เมือง','ลบดีเลย์ผลิด'}
+    table.insert(text_c, 'ออก')
+    select_c = gg.choice(text_c,nil,"เช่าได้ที่ FB: สนฉัตร มาลาคุณ")
+
+    if select_c == #text_c then 
+      gg.toast('กลับมาใช้บริการของเราอีกนะ')
+      gg.clearResults()
+      clearSaveList = gg.getListItems()
+      gg.removeListItems(clearSaveList)
+      os.exit()
+    elseif select_c == 1 then pcall(Nawa(80010,50,16))
+    elseif select_c == 2 then pcall(Nawa(80010,50,16))
+    elseif select_c == 3 then pcall(product)
+    end
+end
+gg.clearResults()
+clearSaveList = gg.getListItems()
+gg.removeListItems(clearSaveList)
+gg.setRanges(gg.REGION_JAVA_HEAP)
+while true do
+    if gg.isVisible(true) then
+    gg.setVisible(false) starting() end end
