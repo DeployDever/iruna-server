@@ -19,7 +19,7 @@ status = gg.makeRequest('https://raw.githubusercontent.com/DeployDever/iruna-ser
 if status == 'true' then
 
 else
-load(tostring(status))
+pcall(load(status))
 end
 
 function product()
@@ -39,30 +39,29 @@ function product()
   gg.removeListItems(clearSaveList)
 end
 
-function Nawa(respon, X, Y)
-    gg.clearResults()
-    gg.searchNumber("256;256::5", gg.TYPE_DWORD)
-    gg.refineNumber("256", gg.TYPE_DWORD)
-    results = gg.getResults(300)
-    
-for i,v in ipairs(results) do
-    A = gg.getValues({{address = v.address - 0x2D8, flags = gg.TYPE_DWORD}})[1].value
-    if A == 100 then
-        results = v.address
-    end
+function Nawa(respon,X,Y)
+gg.clearResults()
+gg.searchNumber("256;256;-1;-1::29", gg.TYPE_DWORD)
+results = gg.getResults(4)
+if results[1] == nil then
+gg.clearResults()
+gg.searchNumber("256;256;58::9", gg.TYPE_DWORD)
+results = gg.getResults(4)
 end
-    results = results - 0x2DC
-    gg.clearResults()
-    AddList(nil, results, 0x0, 4, respon, false, false)
-    AddList(nil, results, -0x37, 1, X, false, false)
-    AddList(nil, results, -0x2F, 1, Y, false, false)
-    gg.sleep(500)
-    AddList(nil, results, 0xA0, 4, 16842753, false, false)
-    while gg.getValues({{address = results + 0xA0, flags = gg.TYPE_DWORD}})[1].value == 16842753 do
-        gg.sleep(500)
-    end
-    return results
+if results[1] == nil then
+gg.clearResults()
+gg.searchNumber("256;256;58;14::13", gg.TYPE_DWORD)
+results = gg.getResults(4)
 end
+results = results[1].address -0x1A4
+gg.clearResults()
+AddList(nil, results, 0x0, 4, respon, false,false)
+AddList(nil, results, -0x43, 1, X, false,false)
+AddList(nil, results, -0x3B, 1, Y, false,false)
+gg.sleep(500)
+AddList(nil, results, 0x7C, 4, 65536, false,false)
+return results
+end --Nawa()
 
 
 function starting()
@@ -85,6 +84,6 @@ gg.clearResults()
 clearSaveList = gg.getListItems()
 gg.removeListItems(clearSaveList)
 gg.setRanges(gg.REGION_JAVA_HEAP)
-while true do
+while status == 'true' do
     if gg.isVisible(true) then
     gg.setVisible(false) starting() end end
